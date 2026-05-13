@@ -1,4 +1,4 @@
-# lib/auth.py
+a# lib/auth.py
 # Project: Lift — Hill Valley Tech
 # Purpose: API key authentication middleware.
 # Variables used:
