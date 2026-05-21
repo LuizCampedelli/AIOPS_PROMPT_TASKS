@@ -10,7 +10,7 @@ import pytest
 os.environ.setdefault("DATABASE_URL", "postgresql://test:test@localhost:5432/lift_test")
 os.environ.setdefault("API_KEY", "test-secret-key")
 
-from app import app  # noqa: E402
+from TASK01.lift.app import app  # noqa: E402
 
 
 @pytest.fixture

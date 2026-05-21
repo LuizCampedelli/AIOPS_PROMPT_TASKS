@@ -11,8 +11,8 @@ import os
 from flask import Flask, jsonify
 from dotenv import load_dotenv
 
-from lib.auth import require_api_key
-from lib.storage import fetch_all
+from TASK01.lift.lib.auth import require_api_key
+from TASK01.lift.lib.storage import fetch_all
 
 load_dotenv()
 
