@@ -1,29 +1,7 @@
-# EXPLANATION.md — Lift Service: RTF Prompt Output
+# Lift Service: RTF Prompt Output
 
-## RTF Framework Breakdown
-
-| Component | Applied as |
-| --------- | ---------- |
-| **Role**  | Senior DevOps engineer specialised in Docker, Kubernetes, and Python — framing technical decisions (multi-stage build, non-root user, env var injection) at production level |
-| **Task**  | Produce a runnable Flask/Gunicorn application containerised for Kubernetes, with `DATABASE_URL` and `API_KEY` injected at runtime |
-| **Format** | Complete project tree (`lift/`), variables and purpose documented at the top of every file, plus this EXPLANATION.md |
-
----
-
-## Project Files
 
 ```
-lift/
-├── app.py              — Flask entry point; loads .env, registers routes
-├── requirements.txt    — Pinned production dependencies
-├── Dockerfile          — Multi-stage build → slim runtime image
-├── lib/
-│   ├── auth.py         — Bearer-token middleware (reads API_KEY)
-│   └── storage.py      — psycopg2 helpers (reads DATABASE_URL)
-└── tests/
-    └── test_app.py     — pytest suite covering health, auth, and items route
-```
-
 ---
 
 ## How to Build and Run
