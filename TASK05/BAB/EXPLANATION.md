@@ -5,7 +5,7 @@ This document outlines the steps to upgrade the `chronos-api` Kubernetes Deploym
 ### 1. Increase Replica Count for High Availability
 
 *   **Problem:** The current `replicas: 1` creates a single point of failure. If the pod crashes, the application becomes unavailable.
-*   **Solution:** Increase the replica count to at least `2`. This ensures that if one pod goes down, another is available to handle requests, providing high availability.
+*   **Solution:** Increase the replica count to at least `3`. This ensures that if one pod goes down, another is available to handle requests, providing high availability.
 
 ### 2. Use Specific Docker Image Tags
 
@@ -15,7 +15,7 @@ This document outlines the steps to upgrade the `chronos-api` Kubernetes Deploym
 ### 3. Externalize Secrets
 
 *   **Problem:** Storing secrets like `DB_PASSWORD` and `JWT_SECRET` directly in the Deployment manifest is a major security risk. Anyone with read access to the manifest can see the plaintext secrets.
-*   **Solution:** 
+*   **Solution:**
     1.  Create a Kubernetes `Secret` object to store these sensitive values.
     2.  Modify the Deployment to reference these secrets using `valueFrom` and `secretKeyRef`. This practice securely injects secrets into the container at runtime without exposing them in version control or to unauthorized users.
 

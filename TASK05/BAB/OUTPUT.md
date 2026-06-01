@@ -6,7 +6,7 @@ metadata:
   labels:
     app: chronos-api
 spec:
-  replicas: 2 # Increased for High Availability
+  replicas: 3 # Increased for High Availability
   selector:
     matchLabels:
       app: chronos-api
@@ -57,6 +57,26 @@ spec:
           runAsNonRoot: true
       securityContext:
         fsGroup: 2000
+
+---
+### Why replicas: 1 → 3
+
+The original manifest ran a single pod (`replicas: 1`), making `chronos-api` a **Single Point of Failure (SPOF)**:
+
+| Scenario with replicas: 1 | Impact |
+|---------------------------|--------|
+| Pod crash or OOM kill | Service fully down until Kubernetes reschedules (30 s – 2 min) |
+| Rolling deployment | Brief downtime as the only pod is replaced |
+| Node failure or maintenance drain | Service fully unavailable until pod is rescheduled on another node |
+
+Setting `replicas: 3` addresses all three:
+
+- **Fault tolerance**: if one pod crashes, two remain serving traffic — Kubernetes restarts the failed pod in the background with zero user impact.
+- **Zero-downtime deployments**: the default rolling update strategy (`maxUnavailable: 1`) takes down one pod at a time while two continue serving, so no request is dropped during a deploy.
+- **Load distribution**: traffic is spread across three instances, reducing per-pod pressure and giving headroom before the HPA needs to scale out.
+- **Node resilience**: with the default pod anti-affinity, Kubernetes schedules pods across different nodes, so a single node going down does not take the entire service offline.
+
+Three replicas is the minimum recommended baseline for a stateless production API. It satisfies the "high availability" requirement stated in the `# After` section without over-provisioning for a service whose traffic profile is not yet defined.
 
 ---
 ### Companion Kubernetes Secret

@@ -29,6 +29,22 @@ metadata:
 *   **Problema Claro:** O manifesto é funcional, mas inseguro e não resiliente.
 *   **Contexto Específico:** Fornece o código exato que precisa ser modificado, eliminando ambiguidades.
 
+#### Destaque: replicas: 1 como ponto de falha único
+
+Uma das falhas mais críticas do manifesto original é `replicas: 1`. Com um único pod em execução, qualquer evento derruba o serviço completamente:
+
+- **Crash ou OOM kill**: serviço indisponível por 30 s a 2 min até o Kubernetes reagendar o pod.
+- **Rolling deployment**: o único pod é substituído, causando downtime durante cada deploy.
+- **Falha ou manutenção de nó**: se o nó for drenado, não há outro pod para assumir o tráfego.
+
+A nova versão define `replicas: 3`, que é o mínimo recomendado para um serviço de produção stateless. Com três réplicas:
+
+1. Uma falha individual de pod não interrompe o serviço — dois pods continuam ativos enquanto o terceiro é reiniciado.
+2. O rolling update padrão (`maxUnavailable: 1`) garante que ao menos dois pods estejam prontos durante qualquer deploy.
+3. O tráfego é distribuído entre três instâncias, reduzindo a pressão individual antes de qualquer escalonamento automático via HPA.
+
+Três réplicas atende ao requisito "high availability" declarado no `# After` sem superdimensionar para um serviço cujo perfil de carga ainda não foi definido em staging.
+
 ### After (Onde queremos chegar)
 
 A seção `# After` define o estado final desejado. Ela não mostra o código final, mas sim uma lista de requisitos e boas práticas que o novo manifesto deve seguir.
